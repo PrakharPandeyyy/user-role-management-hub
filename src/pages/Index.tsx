@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Search, UserPlus, ChevronDown } from "lucide-react";
 import { UserRole, type User } from "@/types/user";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 const mockUsers: User[] = [
   {
@@ -16,13 +18,22 @@ const mockUsers: User[] = [
   },
 ];
 
+const ALL_ROLES = Object.values(UserRole);
+
 export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("All Groups");
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const filteredUsers = mockUsers.filter(user =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleRoleToggle = (email: string, role: UserRole, checked: boolean) => {
+    // Here you would typically make an API call to update the user's roles
+    console.log(`Toggling ${role} for ${email}: ${checked}`);
+    toast.success(`${checked ? 'Added' : 'Removed'} ${role} role for ${email}`);
+  };
 
   const getRoleBadgeClass = (role: UserRole) => {
     const baseClass = "role-badge";
@@ -82,6 +93,7 @@ export default function Index() {
               <tr className="border-b border-white/10">
                 <th className="text-left p-4 text-sm font-medium text-white/60">Email</th>
                 <th className="text-left p-4 text-sm font-medium text-white/60">Type</th>
+                <th className="text-left p-4 text-sm font-medium text-white/60">Assign Roles</th>
                 <th className="text-left p-4 text-sm font-medium text-white/60">Last Active</th>
               </tr>
             </thead>
@@ -95,6 +107,28 @@ export default function Index() {
                         <span key={role} className={getRoleBadgeClass(role)}>
                           {role}
                         </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex flex-wrap gap-4">
+                      {ALL_ROLES.map((role) => (
+                        <div key={role} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`${user.email}-${role}`}
+                            checked={user.roles.includes(role)}
+                            onCheckedChange={(checked) => 
+                              handleRoleToggle(user.email, role, checked as boolean)
+                            }
+                            className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          />
+                          <label
+                            htmlFor={`${user.email}-${role}`}
+                            className="text-sm text-white/70 cursor-pointer hover:text-white"
+                          >
+                            {role}
+                          </label>
+                        </div>
                       ))}
                     </div>
                   </td>
