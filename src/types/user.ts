@@ -12,6 +12,7 @@ export interface User {
   email: string;
   roles: UserRole[];
   lastActive?: string;
+  groups: string[];
 }
 
 export interface Group {
