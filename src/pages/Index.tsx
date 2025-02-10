@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Search, UserPlus, ChevronDown } from "lucide-react";
 import { UserRole, type User, type Group } from "@/types/user";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { AddUserDialog } from "@/components/AddUserDialog";
 import {
   Select,
   SelectContent,
@@ -36,6 +36,7 @@ export default function Index() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [userGroups, setUserGroups] = useState<string[]>([]);
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
 
   useEffect(() => {
     // Here you would fetch the user's groups from the API
@@ -113,7 +114,16 @@ export default function Index() {
             </div>
           </div>
           
-          <button className="glass-panel px-4 py-2 text-sm font-medium text-white/90 hover:text-white flex items-center gap-2 hover:bg-white/5 transition-colors">
+          <button 
+            className="glass-panel px-4 py-2 text-sm font-medium text-white/90 hover:text-white flex items-center gap-2 hover:bg-white/5 transition-colors"
+            onClick={() => {
+              if (!selectedGroup) {
+                toast.error("Please select a group first");
+                return;
+              }
+              setShowAddUserDialog(true);
+            }}
+          >
             <UserPlus className="h-4 w-4" />
             Add User
           </button>
@@ -179,6 +189,12 @@ export default function Index() {
           </div>
         )}
       </div>
+
+      <AddUserDialog 
+        open={showAddUserDialog}
+        onOpenChange={setShowAddUserDialog}
+        selectedGroup={selectedGroup}
+      />
     </div>
   );
 }
