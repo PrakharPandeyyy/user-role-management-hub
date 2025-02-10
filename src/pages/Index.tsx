@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Search, UserPlus, ChevronDown } from "lucide-react";
+import { Search, UserPlus } from "lucide-react";
 import { UserRole, type User, type Group } from "@/types/user";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -37,6 +38,7 @@ export default function Index() {
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [userGroups, setUserGroups] = useState<string[]>([]);
   const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [loadingRoles, setLoadingRoles] = useState<{[key: string]: UserRole[]}>({});
 
   useEffect(() => {
     // Here you would fetch the user's groups from the API
@@ -52,14 +54,54 @@ export default function Index() {
     user.groups.includes(selectedGroup)
   );
 
-  const handleRoleToggle = (email: string, role: UserRole, checked: boolean) => {
+  const handleRoleToggle = async (email: string, role: UserRole, checked: boolean) => {
     if (!selectedGroup) {
       toast.error("Please select a group first");
       return;
     }
-    // Here you would typically make an API call to update the user's roles
-    console.log(`Toggling ${role} for ${email} in group ${selectedGroup}: ${checked}`);
-    toast.success(`${checked ? 'Added' : 'Removed'} ${role} role for ${email} in ${selectedGroup}`);
+
+    // Add role to loading state
+    setLoadingRoles(prev => ({
+      ...prev,
+      [email]: [...(prev[email] || []), role]
+    }));
+
+    try {
+      // Here you would make an API call to update the user's roles
+      // Simulating API call with setTimeout
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate 90% success rate
+          if (Math.random() > 0.1) {
+            resolve(true);
+          } else {
+            reject(new Error("Failed to update role"));
+          }
+        }, 1000);
+      });
+
+      console.log(`Updated ${role} for ${email} in group ${selectedGroup}: ${checked}`);
+      toast.success(`${checked ? 'Added' : 'Removed'} ${role} role for ${email} in ${selectedGroup}`);
+      
+      // Update the local state only after successful API response
+      const userToUpdate = mockUsers.find(u => u.email === email);
+      if (userToUpdate) {
+        if (checked) {
+          userToUpdate.roles = [...userToUpdate.roles, role];
+        } else {
+          userToUpdate.roles = userToUpdate.roles.filter(r => r !== role);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating role:', error);
+      toast.error(`Failed to ${checked ? 'add' : 'remove'} ${role} role. Please try again.`);
+    } finally {
+      // Remove role from loading state
+      setLoadingRoles(prev => ({
+        ...prev,
+        [email]: (prev[email] || []).filter(r => r !== role)
+      }));
+    }
   };
 
   const getRoleBadgeClass = (role: UserRole) => {
@@ -80,6 +122,10 @@ export default function Index() {
       default:
         return baseClass;
     }
+  };
+
+  const isRoleLoading = (email: string, role: UserRole) => {
+    return loadingRoles[email]?.includes(role) || false;
   };
 
   return (
@@ -164,16 +210,22 @@ export default function Index() {
                             <Checkbox 
                               id={`${user.email}-${role}`}
                               checked={user.roles.includes(role)}
+                              disabled={isRoleLoading(user.email, role)}
                               onCheckedChange={(checked) => 
                                 handleRoleToggle(user.email, role, checked as boolean)
                               }
-                              className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                              className={`border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary ${
+                                isRoleLoading(user.email, role) ? 'opacity-50 cursor-wait' : ''
+                              }`}
                             />
                             <label
                               htmlFor={`${user.email}-${role}`}
-                              className="text-sm text-white/70 cursor-pointer hover:text-white"
+                              className={`text-sm text-white/70 cursor-pointer hover:text-white ${
+                                isRoleLoading(user.email, role) ? 'opacity-50' : ''
+                              }`}
                             >
                               {role}
+                              {isRoleLoading(user.email, role) && ' (Loading...)'}
                             </label>
                           </div>
                         ))}
@@ -198,3 +250,4 @@ export default function Index() {
     </div>
   );
 }
+
