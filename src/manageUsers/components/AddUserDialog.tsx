@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { UserRole } from "../types/user";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import { Checkbox } from "./ui/checkbox";
 
 interface AddUserDialogProps {
   open: boolean;
