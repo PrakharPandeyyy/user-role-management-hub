@@ -3,8 +3,8 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { UserRole } from "../types/user";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddUserDialogProps {
   open: boolean;
