@@ -1,17 +1,16 @@
-
 import { useState, useEffect } from "react";
 import { Search, UserPlus } from "lucide-react";
-import { UserRole, type User, type Group } from "@/types/user";
-import { Checkbox } from "@/components/ui/checkbox";
+import { UserRole, type User } from "../types/user";
+import { Checkbox } from "../components/ui/checkbox";
 import { toast } from "sonner";
-import { AddUserDialog } from "@/components/AddUserDialog";
+import { AddUserDialog } from "../components/AddUserDialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../components/ui/select";
 
 // Mock data - replace with actual API calls
 const mockUsers: User[] = [
@@ -41,9 +40,7 @@ export default function Index() {
   const [loadingRoles, setLoadingRoles] = useState<{[key: string]: UserRole[]}>({});
 
   useEffect(() => {
-    // Here you would fetch the user's groups from the API
     setUserGroups(mockUserGroups);
-    // Set the first group as default when groups are loaded
     if (mockUserGroups.length > 0 && !selectedGroup) {
       setSelectedGroup(mockUserGroups[0]);
     }
@@ -60,18 +57,14 @@ export default function Index() {
       return;
     }
 
-    // Add role to loading state
     setLoadingRoles(prev => ({
       ...prev,
       [email]: [...(prev[email] || []), role]
     }));
 
     try {
-      // Here you would make an API call to update the user's roles
-      // Simulating API call with setTimeout
       await new Promise((resolve, reject) => {
         setTimeout(() => {
-          // Simulate 90% success rate
           if (Math.random() > 0.1) {
             resolve(true);
           } else {
@@ -83,7 +76,6 @@ export default function Index() {
       console.log(`Updated ${role} for ${email} in group ${selectedGroup}: ${checked}`);
       toast.success(`${checked ? 'Added' : 'Removed'} ${role} role for ${email} in ${selectedGroup}`);
       
-      // Update the local state only after successful API response
       const userToUpdate = mockUsers.find(u => u.email === email);
       if (userToUpdate) {
         if (checked) {
@@ -96,7 +88,6 @@ export default function Index() {
       console.error('Error updating role:', error);
       toast.error(`Failed to ${checked ? 'add' : 'remove'} ${role} role. Please try again.`);
     } finally {
-      // Remove role from loading state
       setLoadingRoles(prev => ({
         ...prev,
         [email]: (prev[email] || []).filter(r => r !== role)
@@ -250,4 +241,3 @@ export default function Index() {
     </div>
   );
 }
-
