@@ -3,7 +3,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { UserRole } from "../types/user";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@radix-ui/react-dialog";
+import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { Checkbox } from "@radix-ui/react-checkbox";
 
 interface AddUserDialogProps {
@@ -45,15 +45,15 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md glass-panel border-none">
-        <DialogHeader>
+        <div className="flex justify-between items-center mb-4">
           <DialogTitle className="text-xl font-semibold text-white/90">Add User to {selectedGroup}</DialogTitle>
           <button
             onClick={() => onOpenChange(false)}
-            className="absolute right-4 top-4 text-white/60 hover:text-white"
+            className="text-white/60 hover:text-white"
           >
             <X className="h-4 w-4" />
           </button>
-        </DialogHeader>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">
