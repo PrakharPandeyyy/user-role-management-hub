@@ -48,7 +48,7 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
       size="md"
     >
       <form onSubmit={handleSubmit}>
-        <Stack spacing="md">
+        <Stack gap="md">
           <TextInput
             label="Email Address"
             placeholder="user@example.com"
@@ -57,7 +57,7 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
             required
           />
           
-          <Stack spacing="xs">
+          <Stack gap="xs">
             <Title order={6}>Select Roles</Title>
             {Object.values(UserRole).map((role) => (
               <Checkbox
@@ -71,7 +71,7 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
             ))}
           </Stack>
 
-          <Group position="right" mt="md">
+          <Group justify="flex-end" mt="md">
             <Button type="submit">
               Add User
             </Button>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { MantineProvider, Container, Title, Group, Select, TextInput, Button, Paper, Table, Checkbox, Stack } from '@mantine/core';
 import { IconSearch, IconUserPlus } from '@tabler/icons-react';
@@ -90,11 +91,11 @@ export default function UserManagement() {
     <MantineProvider>
       <div className="user-management">
         <Container size="xl" className="user-management-container">
-          <Stack spacing="xl">
+          <Stack gap="xl">
             <Title order={1} className="header-title">User Management</Title>
             
-            <Group position="apart">
-              <Group spacing="md" style={{ flex: 1 }}>
+            <Group justify="space-between">
+              <Group gap="md" style={{ flex: 1 }}>
                 <Select
                   placeholder="Select group"
                   data={userGroups}
@@ -105,7 +106,7 @@ export default function UserManagement() {
                 
                 <TextInput
                   placeholder="Search by email"
-                  icon={<IconSearch size={16} />}
+                  leftSection={<IconSearch size={16} />}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{ flex: 1 }}
@@ -113,7 +114,6 @@ export default function UserManagement() {
               </Group>
               
               <Button
-                leftIcon={<IconUserPlus size={16} />}
                 onClick={() => {
                   if (!selectedGroup) {
                     toast.error("Please select a group first");
@@ -122,7 +122,10 @@ export default function UserManagement() {
                   setShowAddUserDialog(true);
                 }}
               >
-                Add User
+                <Group gap={4}>
+                  <IconUserPlus size={16} />
+                  <span>Add User</span>
+                </Group>
               </Button>
             </Group>
 
@@ -157,13 +160,13 @@ export default function UserManagement() {
                         <td>
                           <div className="roles-container">
                             {Object.values(UserRole).map((role) => (
-                              <Group key={role} spacing="xs">
+                              <Group key={role} gap="xs">
                                 <Checkbox
                                   id={`${user.email}-${role}`}
                                   checked={user.roles.includes(role)}
                                   disabled={loadingRoles[user.email]?.includes(role)}
                                   onChange={(event) => 
-                                    onRoleToggle(user.email, role, event.currentTarget.checked)
+                                    handleRoleToggle(user.email, role, event.currentTarget.checked)
                                   }
                                   label={`${role}${loadingRoles[user.email]?.includes(role) ? ' (Loading...)' : ''}`}
                                 />
