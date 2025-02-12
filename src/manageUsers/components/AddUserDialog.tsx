@@ -1,9 +1,9 @@
+
 import { useState } from "react";
-import { X } from "lucide-react";
+import { Modal, TextInput, Stack, Group, Button, Checkbox, Title } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 import { UserRole } from "../types/user";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
-import { Checkbox } from "./ui/checkbox";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -25,7 +25,6 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
       toast.error("Please select at least one role");
       return;
     }
-    // Here you would make an API call to add the user
     console.log("Adding user:", { email, roles: selectedRoles, group: selectedGroup });
     toast.success(`User ${email} added to ${selectedGroup}`);
     setEmail("");
@@ -42,67 +41,43 @@ export function AddUserDialog({ open, onOpenChange, selectedGroup }: AddUserDial
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md glass-panel border-none">
-        <div className="flex justify-between items-center mb-4">
-          <DialogTitle className="text-xl font-semibold text-white/90">Add User to {selectedGroup}</DialogTitle>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="text-white/60 hover:text-white"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full glass-panel px-3 py-2 text-sm text-white/80 placeholder:text-white/40"
-              placeholder="user@example.com"
-              required
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-white/70">
-              Select Roles
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              {Object.values(UserRole).map((role) => (
-                <div key={role} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`role-${role}`}
-                    checked={selectedRoles.includes(role)}
-                    onCheckedChange={(checked) => 
-                      handleRoleToggle(role, checked as boolean)
-                    }
-                    className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <label
-                    htmlFor={`role-${role}`}
-                    className="text-sm text-white/70 cursor-pointer hover:text-white"
-                  >
-                    {role}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="glass-panel hover:bg-white/10 px-4 py-2 rounded-md text-white"
-            >
+    <Modal
+      opened={open}
+      onClose={() => onOpenChange(false)}
+      title={<Title order={3}>Add User to {selectedGroup}</Title>}
+      size="md"
+    >
+      <form onSubmit={handleSubmit}>
+        <Stack spacing="md">
+          <TextInput
+            label="Email Address"
+            placeholder="user@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          
+          <Stack spacing="xs">
+            <Title order={6}>Select Roles</Title>
+            {Object.values(UserRole).map((role) => (
+              <Checkbox
+                key={role}
+                label={role}
+                checked={selectedRoles.includes(role)}
+                onChange={(event) => 
+                  handleRoleToggle(role, event.currentTarget.checked)
+                }
+              />
+            ))}
+          </Stack>
+
+          <Group position="right" mt="md">
+            <Button type="submit">
               Add User
-            </button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+            </Button>
+          </Group>
+        </Stack>
+      </form>
+    </Modal>
   );
 }

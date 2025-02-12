@@ -1,12 +1,11 @@
-
 import { useState, useEffect } from "react";
+import { MantineProvider, Container, Title, Group, Select, TextInput, Button, Paper, Table, Checkbox, Stack } from '@mantine/core';
+import { IconSearch, IconUserPlus } from '@tabler/icons-react';
+import { toast } from "sonner";
 import { UserRole, type User } from "./types/user";
 import { AddUserDialog } from "./components/AddUserDialog";
-import { UserManagementHeader } from "./components/UserManagementHeader";
-import { UserTable } from "./components/UserTable";
-import { toast } from "sonner";
+import './styles/manageUsers.css';
 
-// Mock data - replace with actual API calls
 const mockUsers: User[] = [
   {
     email: "aaron.smith@example.com",
@@ -88,25 +87,99 @@ export default function UserManagement() {
   };
 
   return (
-    <div className="min-h-screen p-8 animate-fadeIn">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <h1 className="text-4xl font-bold text-white/90">User Management</h1>
-        
-        <UserManagementHeader
-          selectedGroup={selectedGroup}
-          setSelectedGroup={setSelectedGroup}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          userGroups={userGroups}
-          setShowAddUserDialog={setShowAddUserDialog}
-        />
+    <MantineProvider>
+      <div className="user-management">
+        <Container size="xl" className="user-management-container">
+          <Stack spacing="xl">
+            <Title order={1} className="header-title">User Management</Title>
+            
+            <Group position="apart">
+              <Group spacing="md" style={{ flex: 1 }}>
+                <Select
+                  placeholder="Select group"
+                  data={userGroups}
+                  value={selectedGroup}
+                  onChange={(value) => setSelectedGroup(value || '')}
+                  style={{ width: 200 }}
+                />
+                
+                <TextInput
+                  placeholder="Search by email"
+                  icon={<IconSearch size={16} />}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+              </Group>
+              
+              <Button
+                leftIcon={<IconUserPlus size={16} />}
+                onClick={() => {
+                  if (!selectedGroup) {
+                    toast.error("Please select a group first");
+                    return;
+                  }
+                  setShowAddUserDialog(true);
+                }}
+              >
+                Add User
+              </Button>
+            </Group>
 
-        <UserTable
-          users={filteredUsers}
-          selectedGroup={selectedGroup}
-          loadingRoles={loadingRoles}
-          onRoleToggle={handleRoleToggle}
-        />
+            {!selectedGroup ? (
+              <Paper p="xl" ta="center" c="dimmed">
+                Please select a group to manage users
+              </Paper>
+            ) : (
+              <Paper>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Current Roles</th>
+                      <th>Assign Roles</th>
+                      <th>Last Active</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredUsers.map((user) => (
+                      <tr key={user.email}>
+                        <td>{user.email}</td>
+                        <td>
+                          <div className="roles-container">
+                            {user.roles.map(role => (
+                              <span key={role} className={`role-badge role-badge-${role.toLowerCase()}`}>
+                                {role}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td>
+                          <div className="roles-container">
+                            {Object.values(UserRole).map((role) => (
+                              <Group key={role} spacing="xs">
+                                <Checkbox
+                                  id={`${user.email}-${role}`}
+                                  checked={user.roles.includes(role)}
+                                  disabled={loadingRoles[user.email]?.includes(role)}
+                                  onChange={(event) => 
+                                    onRoleToggle(user.email, role, event.currentTarget.checked)
+                                  }
+                                  label={`${role}${loadingRoles[user.email]?.includes(role) ? ' (Loading...)' : ''}`}
+                                />
+                              </Group>
+                            ))}
+                          </div>
+                        </td>
+                        <td>{new Date(user.lastActive!).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Paper>
+            )}
+          </Stack>
+        </Container>
       </div>
 
       <AddUserDialog 
@@ -114,6 +187,6 @@ export default function UserManagement() {
         onOpenChange={setShowAddUserDialog}
         selectedGroup={selectedGroup}
       />
-    </div>
+    </MantineProvider>
   );
 }
