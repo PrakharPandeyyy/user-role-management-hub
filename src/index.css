@@ -20,13 +20,14 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--mantine-color-gray-0);
 }
 
 /* User Management specific styles */
 .user-management {
   padding: 2rem;
   min-height: 100vh;
+  background-color: var(--mantine-color-body);
 }
 
 .user-management-container {
@@ -37,7 +38,7 @@ body {
 .header-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: var(--mantine-color-text);
   margin-bottom: 1.5rem;
 }
 
@@ -49,14 +50,42 @@ body {
 
 .role-badge {
   padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-sm);
   font-weight: 500;
+  transition: transform 0.2s ease;
 }
 
-.role-badge-admin { background-color: #ff6b6b; color: white; }
-.role-badge-active { background-color: #4ecdc4; color: white; }
-.role-badge-populate { background-color: #45b7d1; color: white; }
-.role-badge-write { background-color: #96ceb4; color: white; }
-.role-badge-resolution { background-color: #ffeead; color: #666; }
-.role-badge-users { background-color: #d4a5a5; color: white; }
+.role-badge:hover {
+  transform: translateY(-1px);
+}
+
+.role-badge-admin {
+  background-color: var(--mantine-color-red-6);
+  color: var(--mantine-color-white);
+}
+
+.role-badge-active {
+  background-color: var(--mantine-color-teal-6);
+  color: var(--mantine-color-white);
+}
+
+.role-badge-populate {
+  background-color: var(--mantine-color-blue-6);
+  color: var(--mantine-color-white);
+}
+
+.role-badge-write {
+  background-color: var(--mantine-color-grape-6);
+  color: var(--mantine-color-white);
+}
+
+.role-badge-resolution {
+  background-color: var(--mantine-color-yellow-6);
+  color: var(--mantine-color-dark-9);
+}
+
+.role-badge-users {
+  background-color: var(--mantine-color-pink-6);
+  color: var(--mantine-color-white);
+}
