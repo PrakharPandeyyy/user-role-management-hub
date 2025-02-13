@@ -7,6 +7,23 @@
 }
 
 :root {
+  /* Define our CSS variables */
+  --app-gray-0: #f8f9fa;
+  --app-body-bg: #ffffff;
+  --app-text: #2c2e33;
+  --app-radius-sm: 4px;
+  --app-font-sm: 0.875rem;
+  
+  /* Colors for badges */
+  --app-red: #fa5252;
+  --app-teal: #20c997;
+  --app-blue: #339af0;
+  --app-grape: #be4bdb;
+  --app-yellow: #fcc419;
+  --app-pink: #f06595;
+  --app-white: #ffffff;
+  --app-dark: #212529;
+  
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -20,14 +37,14 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--mantine-color-gray-0);
+  background-color: var(--app-gray-0);
 }
 
 /* User Management specific styles */
 .user-management {
   padding: 2rem;
   min-height: 100vh;
-  background-color: var(--mantine-color-body);
+  background-color: var(--app-body-bg);
 }
 
 .user-management-container {
@@ -38,7 +55,7 @@ body {
 .header-title {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--mantine-color-text);
+  color: var(--app-text);
   margin-bottom: 1.5rem;
 }
 
@@ -50,8 +67,8 @@ body {
 
 .role-badge {
   padding: 0.25rem 0.75rem;
-  border-radius: var(--mantine-radius-sm);
-  font-size: var(--mantine-font-size-sm);
+  border-radius: var(--app-radius-sm);
+  font-size: var(--app-font-sm);
   font-weight: 500;
   transition: transform 0.2s ease;
 }
@@ -61,31 +78,31 @@ body {
 }
 
 .role-badge-admin {
-  background-color: var(--mantine-color-red-6);
-  color: var(--mantine-color-white);
+  background-color: var(--app-red);
+  color: var(--app-white);
 }
 
 .role-badge-active {
-  background-color: var(--mantine-color-teal-6);
-  color: var(--mantine-color-white);
+  background-color: var(--app-teal);
+  color: var(--app-white);
 }
 
 .role-badge-populate {
-  background-color: var(--mantine-color-blue-6);
-  color: var(--mantine-color-white);
+  background-color: var(--app-blue);
+  color: var(--app-white);
 }
 
 .role-badge-write {
-  background-color: var(--mantine-color-grape-6);
-  color: var(--mantine-color-white);
+  background-color: var(--app-grape);
+  color: var(--app-white);
 }
 
 .role-badge-resolution {
-  background-color: var(--mantine-color-yellow-6);
-  color: var(--mantine-color-dark-9);
+  background-color: var(--app-yellow);
+  color: var(--app-dark);
 }
 
 .role-badge-users {
-  background-color: var(--mantine-color-pink-6);
-  color: var(--mantine-color-white);
+  background-color: var(--app-pink);
+  color: var(--app-white);
 }
